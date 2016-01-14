@@ -30,6 +30,17 @@ module Flipper
     raise DuplicateGroup, "Group #{name.inspect} has already been registered"
   end
 
+  def self.unregister(name)
+    source = groups_registry.entries.to_h
+
+    if group_exists?(name)
+      source.delete(name)
+      self.groups_registry = Registry.new(source)
+    else
+      raise GroupNotRegistered, "Group #{name} has not been registered"
+    end
+  end
+
   # Public: Returns a Set of registered Types::Group instances.
   def self.groups
     groups_registry.values.to_set
